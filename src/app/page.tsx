@@ -36,6 +36,34 @@ export default function Home() {
   const [error, setError] = useState('');
   const [library, setLibrary] = useState<VideoItem[]>([]);
   const [isLoadingLibrary, setIsLoadingLibrary] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    
+    if (theme === 'light') {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else if (theme === 'dark') {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (systemPrefersDark) {
+        root.classList.add('dark');
+      }
+      localStorage.setItem('theme', 'system');
+    }
+  }, [theme]);
 
   useEffect(() => {
     return () => {
@@ -44,6 +72,11 @@ export default function Home() {
       }
     };
   }, [videoUrl]);
+
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme);
+    setIsThemeDropdownOpen(false);
+  };
 
   const fetchLibrary = async () => {
     if (!apiKey.trim()) {
@@ -151,18 +184,92 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <header className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Sora 2 Playground
-          </h1>
-          <p className="text-gray-300 text-lg">
-            Generate stunning videos with OpenAI&apos;s Sora 2 model
-          </p>
+        <header className="mb-12">
+          <div className="flex items-center justify-end mb-4">
+            <div className="relative">
+              <button
+                onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors text-sm"
+              >
+                {theme === 'system' ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+                    </svg>
+                    <span>System</span>
+                  </>
+                ) : theme === 'light' ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    </svg>
+                    <span>Light</span>
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                    </svg>
+                    <span>Dark</span>
+                  </>
+                )}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </button>
+              
+              {isThemeDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setIsThemeDropdownOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-20">
+                    <button
+                      onClick={() => handleThemeChange('system')}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors text-sm text-left"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
+                      </svg>
+                      <span>System</span>
+                    </button>
+                    <button
+                      onClick={() => handleThemeChange('light')}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors text-sm text-left"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                      </svg>
+                      <span>Light</span>
+                    </button>
+                    <button
+                      onClick={() => handleThemeChange('dark')}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors text-sm text-left"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                      </svg>
+                      <span>Dark</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-600 bg-clip-text text-transparent leading-tight pb-1">
+              Sora 2 Playground
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              Generate stunning videos with OpenAI&apos;s Sora 2 model
+            </p>
+          </div>
         </header>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+        <div className="bg-gray-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-zinc-800">
           <div className="space-y-6">
             <div>
               <label htmlFor="apiKey" className="block text-sm font-medium mb-2">
@@ -175,12 +282,12 @@ export default function Home() {
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   placeholder="sk-..."
-                  className="w-full px-4 py-3 pr-12 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder-gray-400"
+                  className="w-full px-4 py-3 pr-12 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder-gray-400 text-gray-900 dark:text-white"
                 />
                 <button
                   type="button"
                   onClick={() => setShowApiKey(!showApiKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white transition-colors"
                   aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
                 >
                   {showApiKey ? (
@@ -195,7 +302,7 @@ export default function Home() {
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                 Your API key is only used for this request and never stored
               </p>
             </div>
@@ -210,7 +317,7 @@ export default function Home() {
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe the video you want to generate... (e.g., 'A serene beach at sunset with waves gently crashing on the shore')"
                 rows={4}
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder-gray-400 resize-none"
+                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all placeholder-gray-400 resize-none text-gray-900 dark:text-white"
               />
             </div>
 
@@ -223,7 +330,7 @@ export default function Home() {
                   id="model"
                   value={model}
                   onChange={(e) => setModel(e.target.value as VideoModel)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all text-gray-900 dark:text-white"
                 >
                   <option value="sora-2">Sora 2</option>
                   <option value="sora-2-pro">Sora 2 Pro</option>
@@ -238,7 +345,7 @@ export default function Home() {
                   id="seconds"
                   value={seconds}
                   onChange={(e) => setSeconds(e.target.value as VideoSeconds)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all text-gray-900 dark:text-white"
                 >
                   <option value="4">4 seconds</option>
                   <option value="8">8 seconds</option>
@@ -254,7 +361,7 @@ export default function Home() {
                   id="size"
                   value={size}
                   onChange={(e) => setSize(e.target.value as VideoSize)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all text-gray-900 dark:text-white"
                 >
                   <option value="720x1280">720x1280 (Portrait)</option>
                   <option value="1280x720">1280x720 (Landscape)</option>
@@ -274,36 +381,36 @@ export default function Home() {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setInputReference(e.target.files?.[0] || null)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/20 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-500 file:text-white hover:file:bg-purple-600 file:cursor-pointer"
+                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/50 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-500 file:text-white hover:file:bg-purple-600 file:cursor-pointer text-gray-900 dark:text-white"
                 />
                 {inputReference && (
                   <button
                     type="button"
                     onClick={() => setInputReference(null)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white transition-colors"
                   >
                     ✕
                   </button>
                 )}
               </div>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                 Upload an image to guide the video generation
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-200">
+              <div className="bg-red-50 dark:bg-red-950 border border-red-300 dark:border-red-900 rounded-lg p-4 text-red-700 dark:text-red-400">
                 {error}
               </div>
             )}
 
             {isLoading && (
-              <div className="bg-white/5 rounded-lg p-4 border border-white/20">
+              <div className="bg-gray-100 dark:bg-zinc-800 rounded-lg p-4 border border-gray-200 dark:border-zinc-700">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">{status}</span>
-                  <span className="text-sm font-medium">{progress.toFixed(1)}%</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{status}</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{progress.toFixed(1)}%</span>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-3 overflow-hidden">
+                <div className="w-full bg-gray-200 dark:bg-zinc-700 rounded-full h-3 overflow-hidden">
                   <div
                     className="bg-gradient-to-r from-purple-500 to-pink-600 h-full rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${progress}%` }}
@@ -348,7 +455,7 @@ export default function Home() {
         </div>
 
         {videoUrl && (
-          <div className="mt-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+          <div className="mt-8 bg-gray-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-zinc-800">
             <h2 className="text-2xl font-bold mb-4">Generated Video</h2>
             <div className="rounded-lg overflow-hidden bg-black">
               <video
@@ -365,7 +472,7 @@ export default function Home() {
               <a
                 href={videoUrl}
                 download
-                className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-6 rounded-lg transition-all text-center border border-white/20"
+                className="flex-1 bg-white dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-lg transition-all text-center border border-gray-300 dark:border-zinc-700"
               >
                 Download Video
               </a>
@@ -378,7 +485,7 @@ export default function Home() {
                   setProgress(0);
                   setStatus('');
                 }}
-                className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-6 rounded-lg transition-all border border-white/20"
+                className="flex-1 bg-white dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-lg transition-all border border-gray-300 dark:border-zinc-700"
               >
                 Generate Another
               </button>
@@ -386,13 +493,13 @@ export default function Home() {
           </div>
         )}
 
-        <div className="mt-12 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+        <div className="mt-12 bg-gray-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-zinc-800">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Video Library</h2>
             <button
               onClick={fetchLibrary}
               disabled={isLoadingLibrary || !apiKey.trim()}
-              className="bg-white/10 hover:bg-white/20 disabled:bg-white/5 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-all border border-white/20 flex items-center gap-2"
+              className="bg-white dark:bg-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-700 disabled:bg-gray-100 dark:disabled:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 dark:text-white font-semibold py-2 px-4 rounded-lg transition-all border border-gray-300 dark:border-zinc-700 flex items-center gap-2"
             >
               {isLoadingLibrary ? (
                 <>
@@ -429,7 +536,7 @@ export default function Home() {
           </div>
 
           {library.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
+            <div className="text-center py-12 text-gray-500 dark:text-gray-500">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 mx-auto mb-4 opacity-50">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 7.746 6 7.125v-1.5M4.875 8.25C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 7.125v-1.5m1.125 2.625c-.621 0-1.125.504-1.125 1.125v1.5m2.625-2.625c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125M18 5.625v5.25M7.125 12h9.75m-9.75 0A1.125 1.125 0 016 10.875M7.125 12C6.504 12 6 12.504 6 13.125m0-2.25C6 11.496 5.496 12 4.875 12M18 10.875c0 .621-.504 1.125-1.125 1.125M18 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m-12 5.25v-5.25m0 5.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125m-12 0v-1.5c0-.621-.504-1.125-1.125-1.125M18 18.375v-5.25m0 5.25v-1.5c0-.621.504-1.125 1.125-1.125M18 13.125v1.5c0 .621.504 1.125 1.125 1.125M18 13.125c0-.621.504-1.125 1.125-1.125M6 13.125v1.5c0 .621-.504 1.125-1.125 1.125M6 13.125C6 12.504 5.496 12 4.875 12m-1.5 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M19.125 12h1.5m0 0c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h1.5m14.25 0h1.5" />
               </svg>
@@ -445,7 +552,7 @@ export default function Home() {
           )}
         </div>
 
-        <footer className="mt-12 text-center text-gray-400 text-sm">
+        <footer className="mt-12 text-center text-gray-600 dark:text-gray-500 text-sm">
           <div className="flex items-center justify-center gap-2 flex-wrap">
             <p className="flex items-center gap-1">
               Built with{' '}
@@ -453,8 +560,8 @@ export default function Home() {
               {' '}for free by{' '}
               <a
                 href="https://x.com/AmirZak6"
-                target="_blank"
-                rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
                 className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
               >
                 Amir Zak
@@ -463,8 +570,8 @@ export default function Home() {
             <span>·</span>
             <a
               href="https://buymeacoffee.com/amirzak"
-              target="_blank"
-              rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors font-medium"
             >
               <span>☕</span>
@@ -545,8 +652,8 @@ function VideoCard({ video, apiKey, onDelete }: { video: VideoItem; apiKey: stri
   };
 
   return (
-    <div className="bg-white/5 rounded-lg overflow-hidden border border-white/10 hover:border-white/20 transition-all">
-      <div className="aspect-video bg-black/50 flex items-center justify-center relative">
+    <div className="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden border border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-600 transition-all">
+      <div className="aspect-video bg-gray-100 dark:bg-black flex items-center justify-center relative">
         {video.status === 'completed' ? (
           videoUrl ? (
             <video src={videoUrl} controls className="w-full h-full" />
@@ -554,7 +661,7 @@ function VideoCard({ video, apiKey, onDelete }: { video: VideoItem; apiKey: stri
             <button
               onClick={loadVideo}
               disabled={isLoading}
-              className="absolute inset-0 flex items-center justify-center bg-black/50 hover:bg-black/30 transition-colors"
+              className="absolute inset-0 flex items-center justify-center bg-black/20 dark:bg-black/50 hover:bg-black/10 dark:hover:bg-black/30 transition-colors"
             >
               {isLoading ? (
                 <svg
@@ -585,20 +692,20 @@ function VideoCard({ video, apiKey, onDelete }: { video: VideoItem; apiKey: stri
           )
         ) : (
           <div className="text-center">
-            <p className="text-sm text-gray-400 capitalize">{video.status}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">{video.status}</p>
             {video.progress > 0 && (
-              <p className="text-xs text-gray-500 mt-1">{video.progress}%</p>
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{video.progress}%</p>
             )}
           </div>
         )}
       </div>
       <div className="p-4">
-        <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+        <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 mb-2">
           <span className="font-mono">{video.model}</span>
           <span>{video.size}</span>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-500">{formatDate(video.created_at)}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500">{formatDate(video.created_at)}</p>
           <button
             onClick={deleteVideo}
             disabled={isDeleting}
