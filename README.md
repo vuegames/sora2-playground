@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sora 2 Playground
+
+A modern web application for generating videos with OpenAI's Sora 2 model. Create stunning AI-generated videos directly in your browser with full control over generation parameters.
+
+![Sora 2 Playground](./public/sora-playground.png)
+
+## Features
+
+- 🎬 **Video Generation**: Generate videos with Sora 2 and Sora 2 Pro models
+- 🎨 **Full Control**: Customize model, duration, resolution, and reference images
+- 📊 **Real-time Progress**: Watch generation progress with live updates
+- 📚 **Video Library**: View and manage all your generated videos
+- 🗑️ **Easy Management**: Delete videos with a single click
+- 👁️ **Secure API Key**: Toggle visibility for your OpenAI API key
+- 💾 **Lazy Loading**: Videos load on-demand to optimize bandwidth
+- 🎯 **Client-side Only**: All API calls happen directly from your browser
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ installed
+- An OpenAI API key with Sora access
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/amirzak/sora2-playground.git
+cd sora2-playground
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+### Usage
 
-To learn more about Next.js, take a look at the following resources:
+1. **Enter your API key**: Input your OpenAI API key (it's never stored, only used for requests)
+2. **Write a prompt**: Describe the video you want to generate
+3. **Customize settings**: Choose model, duration, and resolution
+4. **Optional reference**: Upload an image to guide generation
+5. **Generate**: Click generate and watch the progress bar
+6. **Manage library**: View, play, and delete your videos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Parameters
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Model**: 
+  - `sora-2` - Standard model
+  - `sora-2-pro` - Professional model with enhanced quality
+  
+- **Duration**: 4, 8, or 12 seconds
 
-## Deploy on Vercel
+- **Resolution**:
+  - `720x1280` - Portrait
+  - `1280x720` - Landscape
+  - `1024x1792` - Tall
+  - `1792x1024` - Wide
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Input Reference**: Optional image to guide video generation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **API**: OpenAI SDK
+- **Build Tool**: Turbopack
+
+## Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+## SEO Features
+
+This project is fully optimized for search engines with:
+
+- ✅ **Complete Metadata**: Title, description, keywords, and authors
+- ✅ **Open Graph Tags**: For social media sharing (Facebook, LinkedIn)
+- ✅ **Twitter Cards**: Optimized preview cards for Twitter
+- ✅ **Structured Data**: JSON-LD schema for rich search results
+- ✅ **Robots.txt**: Proper crawler instructions
+- ✅ **Dynamic Sitemap**: Auto-generated XML sitemap
+- ✅ **Web App Manifest**: PWA support
+- ✅ **Semantic HTML**: Proper heading hierarchy and structure
+
+### Customization for Production
+
+Before deploying, update the following in `src/app/layout.tsx`:
+
+1. **Twitter Handle**: Update `@yourusername` to your Twitter handle
+2. **Google Verification**: Replace `your-google-verification-code` with your actual code
+3. **Social Image**: Ensure `/sora-playground.png` is optimized (1200x630px recommended)
+
+## Security Note
+
+Your OpenAI API key is only used for direct API calls from your browser and is never sent to any server or stored anywhere. Always keep your API key secure and never commit it to version control.
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Acknowledgments
+
+- Built with [OpenAI Sora 2](https://openai.com/sora)
+- Powered by [Next.js](https://nextjs.org)
