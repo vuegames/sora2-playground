@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://sora2playground.com';
@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 1,
     },
   ];

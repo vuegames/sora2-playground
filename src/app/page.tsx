@@ -7,6 +7,20 @@ type VideoModel = 'sora-2' | 'sora-2-pro';
 type VideoSeconds = '4' | '8' | '12';
 type VideoSize = '720x1280' | '1280x720' | '1024x1792' | '1792x1024';
 
+interface VideoItem {
+  id: string;
+  status: 'queued' | 'in_progress' | 'completed' | 'failed';
+  progress: number;
+  model: VideoModel;
+  size: VideoSize;
+  created_at: number;
+  completed_at?: number | null;
+  error?: {
+    code: string;
+    message: string;
+  } | null;
+}
+
 export default function Home() {
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
@@ -20,7 +34,7 @@ export default function Home() {
   const [status, setStatus] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [error, setError] = useState('');
-  const [library, setLibrary] = useState<any[]>([]);
+  const [library, setLibrary] = useState<VideoItem[]>([]);
   const [isLoadingLibrary, setIsLoadingLibrary] = useState(false);
 
   useEffect(() => {
@@ -89,18 +103,15 @@ export default function Home() {
         dangerouslyAllowBrowser: true,
       });
 
-      const createParams: any = {
+      const createParams = {
         model,
         prompt,
         seconds,
         size,
+        ...(inputReference && { input_reference: inputReference }),
       };
 
-      if (inputReference) {
-        createParams.input_reference = inputReference;
-      }
-
-      let video = await openai.videos.create(createParams) as any;
+      let video = await openai.videos.create(createParams) as VideoItem;
       
       setStatus(video.status === 'queued' ? 'Queued' : 'Processing');
       setProgress(video.progress ?? 0);
@@ -108,7 +119,7 @@ export default function Home() {
       while (video.status === 'in_progress' || video.status === 'queued') {
         await new Promise((resolve) => setTimeout(resolve, 2000));
         
-        video = await openai.videos.retrieve(video.id) as any;
+        video = await openai.videos.retrieve(video.id) as VideoItem;
         setProgress(video.progress ?? 0);
         setStatus(video.status === 'queued' ? 'Queued' : 'Processing');
       }
@@ -147,7 +158,7 @@ export default function Home() {
             Sora 2 Playground
           </h1>
           <p className="text-gray-300 text-lg">
-            Generate stunning videos with OpenAI's Sora 2 model
+            Generate stunning videos with OpenAI&apos;s Sora 2 model
           </p>
         </header>
 
@@ -452,7 +463,7 @@ export default function Home() {
   );
 }
 
-function VideoCard({ video, apiKey, onDelete }: { video: any; apiKey: string; onDelete: () => void }) {
+function VideoCard({ video, apiKey, onDelete }: { video: VideoItem; apiKey: string; onDelete: () => void }) {
   const [videoUrl, setVideoUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

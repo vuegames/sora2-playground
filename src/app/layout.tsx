@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://sora2playground.com'),
   title: "Sora 2 Playground - AI Video Generation with OpenAI Sora",
   description: "Generate stunning AI videos with OpenAI's Sora 2 and Sora 2 Pro models. Full control over duration, resolution, and generation parameters. Try it free in your browser.",
   keywords: ["Sora 2", "OpenAI", "AI video generation", "Sora playground", "video AI", "text to video", "Sora 2 Pro", "AI video creator"],
@@ -53,14 +54,15 @@ export const metadata: Metadata = {
     images: ["/sora-playground.png"],
     creator: "@yourusername",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
   verification: {
     google: "your-google-verification-code",
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
