@@ -9,7 +9,7 @@ Create SOTA AI-generated videos directly in your browser with full control over 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 <div align="center">
-  <img src="./public/sora2-playground.png" alt="Sora 2 Playground" width="800" />
+  <img src="./public/sora2-playground.png" alt="Sora 2 Playground" width="200" />
 </div>
 
 ## ✨ Features
