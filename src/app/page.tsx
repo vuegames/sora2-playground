@@ -66,8 +66,11 @@ export default function Home() {
             <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-600 bg-clip-text text-transparent leading-tight pb-1">
               Sora 2 Playground
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              Generate stunning videos with OpenAI&apos;s Sora 2 model
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">
+              Generate videos with OpenAI&apos;s Sora 2 model
+            </p>
+            <p className="text-gray-500 dark:text-gray-500 text-sm">
+              🔒 Privacy-first • No data collection • Your API key stays secure • 100% Client-side • Open Source
             </p>
           </div>
         </header>
