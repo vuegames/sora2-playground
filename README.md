@@ -8,7 +8,9 @@ Create SOTA AI-generated videos directly in your browser with full control over 
 [![GitHub Stars](https://img.shields.io/github/stars/amirzak/sora2-playground?style=for-the-badge&logo=github)](https://github.com/amirzak/sora2-playground)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-![Sora 2 Playground](./public/sora2-playground.png)
+<div align="center">
+  <img src="./public/sora2-playground.png" alt="Sora 2 Playground" width="800" />
+</div>
 
 ## ✨ Features
 

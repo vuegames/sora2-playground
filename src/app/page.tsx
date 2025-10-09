@@ -128,6 +128,16 @@ export default function Home() {
               <span>☕</span>
               Buy me a coffee
             </a>
+            <span>·</span>
+            <a
+              href="https://github.com/amirzak/sora2-playground"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors font-medium"
+            >
+              <span>⭐</span>
+              Open Source
+            </a>
           </div>
         </footer>
       </div>
