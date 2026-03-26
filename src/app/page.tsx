@@ -58,11 +58,17 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden text-gray-900 dark:text-white transition-colors bg-white dark:bg-black">
       
-      {/* Анимированный фон (Blur Blobs) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/20 blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-pink-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500/10 blur-[100px] animate-bounce" style={{ animationDuration: '8s' }}></div>
+      {/* Ахуенный анимированный фон с кубиками */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Мягкие пятна на фоне */}
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-pink-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '3s' }}></div>
+
+        {/* Летающие кубики */}
+        <div className="absolute top-[15%] left-[10%] w-12 h-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 rounded-lg rotate-12 animate-floating"></div>
+        <div className="absolute top-[60%] left-[5%] w-20 h-20 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-white/5 rounded-xl -rotate-12 animate-floating" style={{ animationDelay: '1s', animationDuration: '7s' }}></div>
+        <div className="absolute top-[40%] right-[8%] w-16 h-16 bg-gradient-to-br from-pink-500/15 to-orange-500/15 border border-white/10 rounded-lg rotate-45 animate-floating" style={{ animationDelay: '2s', animationDuration: '9s' }}></div>
+        <div className="absolute bottom-[15%] right-[15%] w-24 h-24 bg-gradient-to-br from-purple-600/10 to-blue-600/10 border border-white/5 rounded-2xl rotate-12 animate-floating" style={{ animationDelay: '0.5s', animationDuration: '10s' }}></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl flex flex-col min-h-screen">
@@ -71,14 +77,14 @@ export default function Home() {
             <ThemeDropdown theme={theme} onThemeChange={setTheme} />
           </div>
           <div className="text-center">
-            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-600 bg-clip-text text-transparent leading-tight pb-1">
-              Sora 2 Playground
+            <h1 className="text-6xl font-black mb-4 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 dark:from-purple-400 dark:via-pink-500 dark:to-orange-400 bg-clip-text text-transparent leading-tight pb-2 tracking-tighter">
+              Sora Video Maker
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">
-              Generate videos with OpenAI&apos;s Sora 2 model
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-2 font-medium">
+              Create cinematic AI videos in seconds
             </p>
-            <p className="text-gray-500 dark:text-gray-500 text-sm">
-              🔒 Privacy-first • No data collection • Your API key stays secure
+            <p className="text-gray-400 dark:text-gray-500 text-xs tracking-widest uppercase">
+              Powered by Sora 2.0 Technology
             </p>
           </div>
         </header>
@@ -116,12 +122,24 @@ export default function Home() {
           />
         </main>
 
-        <footer className="mt-auto py-8 text-center border-t border-gray-200 dark:border-gray-800">
-          <div className="text-gray-500 dark:text-gray-400 font-medium tracking-widest text-sm uppercase">
+        <footer className="mt-auto py-10 text-center border-t border-gray-200/50 dark:border-gray-800/50">
+          <div className="text-gray-400 dark:text-gray-500 font-bold tracking-[0.3em] text-xs uppercase opacity-80">
             Vue Games Prod. 2026
           </div>
         </footer>
       </div>
+
+      {/* Стили для анимации полета кубиков */}
+      <style jsx global>{`
+        @keyframes floating {
+          0% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
+          100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-floating {
+          animation: floating 6s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
