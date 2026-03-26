@@ -56,8 +56,16 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="relative min-h-screen overflow-hidden text-gray-900 dark:text-white transition-colors bg-white dark:bg-black">
+      
+      {/* Анимированный фон (Blur Blobs) */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/20 blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-pink-500/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500/10 blur-[100px] animate-bounce" style={{ animationDuration: '8s' }}></div>
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8 max-w-4xl flex flex-col min-h-screen">
         <header className="mb-12">
           <div className="flex items-center justify-end mb-4">
             <ThemeDropdown theme={theme} onThemeChange={setTheme} />
@@ -70,48 +78,47 @@ export default function Home() {
               Generate videos with OpenAI&apos;s Sora 2 model
             </p>
             <p className="text-gray-500 dark:text-gray-500 text-sm">
-              🔒 Privacy-first • No data collection • Your API key stays secure • 100% Client-side • Open Source
+              🔒 Privacy-first • No data collection • Your API key stays secure
             </p>
           </div>
         </header>
 
-        <VideoGenerationForm
-          apiKey={apiKey}
-          setApiKey={setApiKey}
-          showApiKey={showApiKey}
-          setShowApiKey={setShowApiKey}
-          prompt={prompt}
-          setPrompt={setPrompt}
-          model={model}
-          setModel={setModel}
-          seconds={seconds}
-          setSeconds={setSeconds}
-          size={size}
-          setSize={setSize}
-          inputReference={inputReference}
-          setInputReference={setInputReference}
-          error={error}
-          isLoading={isLoading}
-          progress={progress}
-          status={status}
-          onGenerate={handleGenerate}
-        />
+        <main className="flex-grow">
+          <VideoGenerationForm
+            apiKey={apiKey}
+            setApiKey={setApiKey}
+            showApiKey={showApiKey}
+            setShowApiKey={setShowApiKey}
+            prompt={prompt}
+            setPrompt={setPrompt}
+            model={model}
+            setModel={setModel}
+            seconds={seconds}
+            setSeconds={setSeconds}
+            size={size}
+            setSize={setSize}
+            inputReference={inputReference}
+            setInputReference={setInputReference}
+            error={error}
+            isLoading={isLoading}
+            progress={progress}
+            status={status}
+            onGenerate={handleGenerate}
+          />
 
-        <GeneratedVideo videoUrl={videoUrl} onReset={handleVideoReset} />
+          <GeneratedVideo videoUrl={videoUrl} onReset={handleVideoReset} />
 
-        <VideoLibrary
-          library={library}
-          apiKey={apiKey}
-          isLoadingLibrary={isLoadingLibrary}
-          onRefresh={() => fetchLibrary(apiKey)}
-        />
+          <VideoLibrary
+            library={library}
+            apiKey={apiKey}
+            isLoadingLibrary={isLoadingLibrary}
+            onRefresh={() => fetchLibrary(apiKey)}
+          />
+        </main>
 
-
-              <span>☕</span>
-             Vue Games Production 2026
-            </a>
-            <span>·</span>
-           
+        <footer className="mt-auto py-8 text-center border-t border-gray-200 dark:border-gray-800">
+          <div className="text-gray-500 dark:text-gray-400 font-medium tracking-widest text-sm uppercase">
+            Vue Games Prod. 2026
           </div>
         </footer>
       </div>
