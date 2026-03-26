@@ -106,41 +106,12 @@ export default function Home() {
           onRefresh={() => fetchLibrary(apiKey)}
         />
 
-        <footer className="mt-12 text-center text-gray-600 dark:text-gray-500 text-sm">
-          <div className="flex items-center justify-center gap-2 flex-wrap">
-            <p className="flex items-center gap-1">
-              Built with{' '}
-              <span className="text-red-400">❤️</span>
-              {' '}for free by{' '}
-              <a
-                href="https://x.com/AmirZak6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
-              >
-                Amir Zak
-              </a>
-            </p>
-            <span>·</span>
-            <a
-              href="https://buymeacoffee.com/amirzak"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors font-medium"
-            >
+
               <span>☕</span>
-              Buy me a coffee
+             Vue Games Production 2026
             </a>
             <span>·</span>
-            <a
-              href="https://github.com/amirzak/sora2-playground"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300 transition-colors font-medium"
-            >
-              <span>⭐</span>
-              Open Source
-            </a>
+           
           </div>
         </footer>
       </div>
