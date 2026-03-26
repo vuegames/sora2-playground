@@ -2,6 +2,3 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://sora2playground.com/sitemap.xml
-
